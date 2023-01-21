@@ -6,6 +6,7 @@ require("dotenv").config();
 require("./utils/database.util")
 const authRoutes = require("./routes/auth.route")
 const userRoutes = require("./routes/user.route")
+const postRoutes = require("./routes/post.route")
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(morgan("combined"))
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/user", userRoutes)
+app.use("/api/v1/post", postRoutes)
 
 app.get("/api/v1", expressAsyncHandler(async (req, res) => {
     res.json({

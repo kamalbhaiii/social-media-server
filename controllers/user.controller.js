@@ -6,7 +6,7 @@ const { find } = require("../models/user.model");
 const handleGetUser = expressAsyncHandler(async (req, res) => {
     const { id } = req.params;
     try {
-        const user = await User.findById(id).populate("friends")
+        const user = await User.findById(id).populate(["friends", "posts"])
 
         if (!user) {
             res.status(404).json({
@@ -82,7 +82,7 @@ const handleDeleteUser = expressAsyncHandler(async (req, res) => {
 
 const handleGetAllUser = expressAsyncHandler(async (req, res) => {
     try {
-        const users = await User.find().populate("friends");
+        const users = await User.find().populate(["friends", "posts"]);
 
         res.json({
             status: true, message: users
