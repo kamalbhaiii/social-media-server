@@ -25,7 +25,7 @@ const genAuthToken = async (payload) => {
             firstName: payload.firstName,
             lastName: payload.lastName,
             email: payload.email,
-            username: payload.email
+            username: payload.username
         }, process.env.JWT_SECRET, {
             expiresIn: "1d"
         })
