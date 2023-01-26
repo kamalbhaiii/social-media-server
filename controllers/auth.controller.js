@@ -1,6 +1,7 @@
 const expressAsyncHandler = require("express-async-handler");
 const User = require("../models/user.model")
-const { hashPassword, checkPassword, genAuthToken, getResetPassToken } = require("../utils/auth.util")
+const { hashPassword, checkPassword, genAuthToken, getResetPassToken } = require("../utils/auth.util");
+const { resetPasswordMail, resetPasswordSuccessMail } = require("../utils/email.util");
 
 const signUpHandler = expressAsyncHandler(async (req, res) => {
     const { firstName, lastName, email, password, username } = req.body;
@@ -111,7 +112,9 @@ const forgetPasswordHandler = expressAsyncHandler(async (req, res) => {
             if (userExist) {
                 const resetToken = await getResetPassToken(userExist);
                 const resetUrl = `${process.env.CLIENT_URL}/resetPassword/${resetToken}`;
-                console.log(resetUrl);
+
+                await resetPasswordMail(userExist, resetUrl)
+
                 res.json({
                     status: true, message: "Reset password link has been sent to registered email address."
                 })
@@ -146,6 +149,8 @@ const resetPasswordHandler = expressAsyncHandler(async (req, res) => {
 
                 user.password = await hashPassword(password)
                 await user.save()
+
+                await resetPasswordSuccessMail(user)
 
                 res.json({
                     status: true, message: "Password has been changed Successfully."

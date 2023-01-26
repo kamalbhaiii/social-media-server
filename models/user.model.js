@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
     username: { type: String, unique: true },
     password: { type: String, required: true, min: 6, select: false },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+    emailVerified: { type: Boolean, default: false }
 }, {
     timestamps: true
 })
