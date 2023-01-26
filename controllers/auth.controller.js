@@ -1,6 +1,6 @@
 const expressAsyncHandler = require("express-async-handler");
 const User = require("../models/user.model")
-const { hashPassword, checkPassword, genAuthToken } = require("../utils/auth.util")
+const { hashPassword, checkPassword, genAuthToken, getResetPassToken } = require("../utils/auth.util")
 
 const signUpHandler = expressAsyncHandler(async (req, res) => {
     const { firstName, lastName, email, password, username } = req.body;
@@ -98,7 +98,71 @@ const loginHandler = expressAsyncHandler(async (req, res) => {
     }
 })
 
+const forgetPasswordHandler = expressAsyncHandler(async (req, res) => {
+    const { email } = req.body;
+    try {
+        if (!email) {
+            res.status(409).json({
+                status: false, message: "Email is a required field."
+            })
+        } else {
+            const userExist = await User.findOne({ email });
+
+            if (userExist) {
+                const resetToken = await getResetPassToken(userExist);
+                const resetUrl = `${process.env.CLIENT_URL}/resetPassword/${resetToken}`;
+                console.log(resetUrl);
+                res.json({
+                    status: true, message: "Reset password link has been sent to registered email address."
+                })
+            } else {
+                res.status(404).json({
+                    status: false, message: "This email id is not registered."
+                })
+            }
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+            status: false, message: err.message || "Internal Server Error"
+        })
+    }
+})
+
+const resetPasswordHandler = expressAsyncHandler(async (req, res) => {
+    const { password } = req.body;
+    try {
+        if (!password) {
+            res.status(409).json({
+                status: false, message: "Password is a required Field."
+            })
+        } else {
+            if (await checkPassword(password, req.user.password)) {
+                res.status(403).json({
+                    status: false, message: "New password cannot be same as the old password."
+                })
+            } else {
+                const user = await User.findById(req.user._id).select("+password");
+
+                user.password = await hashPassword(password)
+                await user.save()
+
+                res.json({
+                    status: true, message: "Password has been changed Successfully."
+                })
+            }
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+            status: false, message: err.message || "Internal Server Error."
+        })
+    }
+})
+
 module.exports = {
     signUpHandler,
-    loginHandler
+    loginHandler,
+    forgetPasswordHandler,
+    resetPasswordHandler
 }
