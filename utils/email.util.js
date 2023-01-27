@@ -56,7 +56,31 @@ const resetPasswordSuccessMail = async (user) => {
     }
 }
 
+const accountCreatedSuccessMail = async (user) => {
+    let filePath = path.join(__dirname, "..", "static", "accountCreatedSuccess.html");
+    let htmlFile = await readFile(filePath, 'utf-8');
+    let template = handlebars.compile(htmlFile)
+    let emailTemp = template({
+        name: user.firstName,
+    })
+
+    try {
+        let info = await transporter.sendMail({
+            from: '"Social Media App || Kamal" <coding.coding.everyday@gmail.com>',
+            to: user.email,
+            subject: "Account Successfully Created || Social Media App",
+            text: `Hi ${user.firstName}, we have sent you this email because your account was successfully created.`,
+            html: emailTemp,
+        });
+        return `Message sent: ${info.messageId}`
+    }
+    catch (err) {
+        return err.message
+    }
+}
+
 module.exports = {
     resetPasswordMail,
-    resetPasswordSuccessMail
+    resetPasswordSuccessMail,
+    accountCreatedSuccessMail
 }

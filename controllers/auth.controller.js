@@ -1,7 +1,7 @@
 const expressAsyncHandler = require("express-async-handler");
 const User = require("../models/user.model")
 const { hashPassword, checkPassword, genAuthToken, getResetPassToken } = require("../utils/auth.util");
-const { resetPasswordMail, resetPasswordSuccessMail } = require("../utils/email.util");
+const { resetPasswordMail, resetPasswordSuccessMail, accountCreatedSuccessMail } = require("../utils/email.util");
 
 const signUpHandler = expressAsyncHandler(async (req, res) => {
     const { firstName, lastName, email, password, username } = req.body;
@@ -29,6 +29,8 @@ const signUpHandler = expressAsyncHandler(async (req, res) => {
                 } else {
                     const user = new User({ firstName, lastName, email, password: await hashPassword(password), username })
                     await user.save()
+
+                    await accountCreatedSuccessMail(user)
 
                     res.json({
                         status: true, message: "User registered successfully."
