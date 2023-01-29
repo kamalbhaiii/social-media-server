@@ -457,7 +457,7 @@
 </head>
 
 <body>
-    <span class="preheader">Use this link to reset your password. The link is only valid for 10 minutes.</span>
+    <span class="preheader">Use this link to verify your email id. The link is only valid for 10 days.</span>
     <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
             <td align="center">
@@ -480,9 +480,9 @@
                                     <td class="content-cell">
                                         <div class="f-fallback">
                                             <h1>Hi {{name}},</h1>
-                                            <p>Your account has been successfully created. You may login to
-                                                your account newly created account by using the button
-                                                below.</p>
+                                            <p>Your account has been successfully created. <b>Please click on the button
+                                                    given below to verify your account and continue enjoying the best of
+                                                    your time.</b></p>
                                             <!-- Action -->
                                             <table class="body-action" align="center" width="100%" cellpadding="0"
                                                 cellspacing="0" role="presentation">
@@ -494,9 +494,9 @@
                                                             role="presentation">
                                                             <tr>
                                                                 <td align="center">
-                                                                    <a href="https://social-media-client-kamal.vercel.app/login"
+                                                                    <a href={{url}}
                                                                         class="f-fallback button button--green"
-                                                                        style="color: white;" target="_blank">Login to
+                                                                        style="color: white;" target="_blank">Verify
                                                                         your Account</a>
                                                                 </td>
                                                             </tr>
@@ -504,11 +504,10 @@
                                                     </td>
                                                 </tr>
                                             </table>
-                                            <!-- <p>For security, this request was received from a {{operating_system}}
-                                                device using {{browser_name}}. If you did not request a password reset,
-                                                please ignore this email or <a href="{{support_url}}">contact
-                                                    support</a> if you have questions.</p>
-                                            <p>-->
+                                            <p>FYI: This email id verification button is only valid for 10 days. Your
+                                                account associated with us will be suspended if not verified within 10
+                                                days.</p>
+                                            <p>
                                             <p>Thank You for using our app. Have a great time ahead.</p>
                                             Thanks,
                                             <br>The Social Media App team
@@ -520,8 +519,7 @@
                                                             button above, copy and paste the URL below into your web
                                                             browser.</p>
                                                         <p class="f-fallback sub">
-                                                            <a href="https://social-media-client-kamal.vercel.app/login"
-                                                                target="_blank">https://social-media-client-kamal.vercel.app/login</a>
+                                                            <a href={{url}} target="_blank">{{url}}</a>
                                                         </p>
                                                     </td>
                                                 </tr>

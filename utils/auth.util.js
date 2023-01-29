@@ -53,4 +53,19 @@ const getResetPassToken = async (payload) => {
     }
 }
 
-module.exports = { hashPassword, checkPassword, genAuthToken, getResetPassToken };
+const getVerifyAccountToken = async (payload) => {
+    try {
+        const verifyAccountToken = jwt.sign({
+            email: payload.email, username: payload.username
+        }, process.env.JWT_VERIFY_ACCOUNT_SECRET, {
+            expiresIn: "10d"
+        })
+
+        return verifyAccountToken
+    }
+    catch (err) {
+        return err;
+    }
+}
+
+module.exports = { hashPassword, checkPassword, genAuthToken, getResetPassToken, getVerifyAccountToken };

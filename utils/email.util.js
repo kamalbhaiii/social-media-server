@@ -4,6 +4,7 @@ const { fileURLToPath } = require("url")
 const handlebars = require("handlebars")
 const fs = require("fs")
 const path = require("path")
+const { getVerifyAccountToken } = require("./auth.util")
 
 // const __filename = fileURLToPath(import.meta.url);
 const readFile = promisify(fs.readFile);
@@ -60,15 +61,17 @@ const accountCreatedSuccessMail = async (user) => {
     let filePath = path.join(__dirname, "..", "static", "accountCreatedSuccess.html");
     let htmlFile = await readFile(filePath, 'utf-8');
     let template = handlebars.compile(htmlFile)
+    const token = await getVerifyAccountToken(user)
     let emailTemp = template({
         name: user.firstName,
+        url: `${process.env.CLIENT_URL}/verifyAccount/${token}`
     })
 
     try {
         let info = await transporter.sendMail({
             from: '"Social Media App || Kamal" <coding.coding.everyday@gmail.com>',
             to: user.email,
-            subject: "Account Successfully Created || Social Media App",
+            subject: "Verify Your Account || Social Media App",
             text: `Hi ${user.firstName}, we have sent you this email because your account was successfully created.`,
             html: emailTemp,
         });

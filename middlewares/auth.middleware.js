@@ -11,7 +11,7 @@ const authenticate = expressAsyncHandler(async (req, res, next) => {
             })
         } else {
             if (authorization.startsWith("Bearer")) {
-                const { email } = jwt.verify(authorization.split(" ")[1], process.env.JWT_SECRET);
+                const { email } = jwt.verify(authorization.split(" ")[1], process.env.JWT_SECRET || process.env.JWT_VERIFY_ACCOUNT_SECRET);
 
                 if (email) {
                     const user = await User.findOne({ email });
