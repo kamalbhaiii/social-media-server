@@ -55,7 +55,7 @@ const loginHandler = expressAsyncHandler(async (req, res) => {
                 const userExist = await User.findOne({ email }).select("+password")
                 if (userExist) {
                     if (await checkPassword(password, userExist.password)) {
-                        const token = await genAuthToken(await User.findOne({ email }))
+                        const token = await genAuthToken(await User.findOne({ email }).populate("friends", "posts"))
                         res.json({
                             status: true, message: token
                         })
